@@ -1,11 +1,11 @@
 <div align="center">
 
 <a href="">
-<img width="600" alt="image" src="images/title.png">
+<img width="450" alt="image" src="images/title.png">
 </a>
 
 
-by [Xu Ma*](https://ma-xu.github.io/), [Xiyang Dai](https://sites.google.com/site/xiyangdai/), 
+by [Xu Ma](https://ma-xu.github.io/), [Xiyang Dai](https://sites.google.com/site/xiyangdai/), 
 [Yue Bai](https://yueb17.github.io/), [Yizhou Wang](https://wyzjack.github.io/), [Yun Fu](http://www1.ece.neu.edu/~yunfu/). 
 
 </div>

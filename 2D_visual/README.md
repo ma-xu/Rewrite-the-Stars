@@ -1,4 +1,4 @@
-# [Rewrite the Stars]() - CVPR'24
+# [Rewrite the Stars](https://arxiv.org/abs/2403.19967) - CVPR'24
 
 In this folder, we show how to plot the decision boundary for 2D points.
 

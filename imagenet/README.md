@@ -1,4 +1,4 @@
-# [Rewrite the Stars]() - CVPR'24
+# [Rewrite the Stars](https://arxiv.org/abs/2403.19967) - CVPR'24
 
 
 ## Image Classification for DemoNet and StarNet
@@ -28,15 +28,26 @@ data prepare: ImageNet with the following folder structure, you can extract Imag
 
 
 ### 3. Train DemoNet and StarNet
-We show how to train models on 8 GPUs.
+We show how to train models on 8 GPUs. We retrain all models based on the relased file, and achieve slightly better results than reported.
 
 ```bash
 # Train DemoNet variants
 python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data_dir {path-to-imagenet} --model {demonet-variants} -b 256 --lr 4e-3 --model-ema
-# Train StarNet variants (--drop-path 0. for S1,S2,S3, and 0.1 for S4)
+# Train StarNet variants (--drop-path 0. for S1, 0.01 for S2,S3, and 0.02 for S4)
 # Based on previous works, efficient / small networks don't need strong augmentations.
-python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data_dir {path-to-imagenet} --model {starnet-variants} -b 256 --lr 3e-3 --weight-decay 0.025 --aa rand-m1-mstd0.5-inc1 --cutmix 0.2 --color-jitter 0. --drop-path 0.
+python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data_dir {path-to-imagenet} --model {starnet-variants} -b 256 --lr 3e-3 --weight-decay 0.05 --aa rand-m1-mstd0.5-inc1 --cutmix 0.2 --color-jitter 0. --drop-path 0.
 ```
+
+### 4. Pretrained checkpoints
+
+| Model      | Params | FLOPs | Top-1 | Mobile / GPU / CPU latency (ms) | Download      |
+|------------|--------|-------|-------|---------------------------------|---------------|
+| starnet_s1 | 2.9M   | 425M  | 73.6  | 0.7 / 2.3 / 4.3                 | [[model](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s1.pth.tar)] [[log](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s1.csv)] |
+| starnet_s2 | 3.7M   | 547M  | 74.7  | 0.7 / 2.0 / 4.5                 | [[model](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s2.pth.tar)] [[log](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s2.csv)] |
+| starnet_s3 | 5.8M  | 757M  | 77.4  | 0.9 / 2.7 / 6.7                 | [[model](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s3.pth.tar)] [[log](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s3.csv)] |
+| starnet_s4 | 7.5M   | 1075M | 78.8  | 1.0 / 3.7 / 9.4                 | [[model](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s4.pth.tar)] [[log](https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s4.csv)] |
+
+
 
 ## Benchmark ONNX speed on CPU and GPU :v::v::v:
 We also provide a script to help benchmark model latency on different platforms, which is important but always not available. 

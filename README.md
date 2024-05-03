@@ -26,8 +26,14 @@ Like stars in the sky, the star operation appears unremarkable but holds a vast 
 
 ### [Folder: ImageNet Training (& Benchmark)](imagenet/)
 
-### [Folder: Decision Boundary Visualization](2D_visual/)
+- Model files of DemoNet and StarNet
+- Checkpoints of StarNet
+- Benchmark script to benchmark  ONNX latency
+- Export pytorch models to CoreML models
 
+
+### [Folder: Decision Boundary Visualization](2D_visual/)
+- Visualization of decision boundary
 
 
 ## BibTeX

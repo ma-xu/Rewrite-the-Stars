@@ -148,8 +148,3 @@ def starnet_s100(pretrained=False, **kwargs):
 @register_model
 def starnet_s150(pretrained=False, **kwargs):
     return StarNet(24, [1, 2, 4, 2], 3, **kwargs)
-
-
-if __name__ == '__main__':
-    model = starnet_s2(pretrained=True)
-    print(model)

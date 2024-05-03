@@ -1,6 +1,10 @@
 """
 Implementation of Prof-of-Concept Network: StarNet.
-We make StarNet as simple as possible, like no layer-scale, etc., which would improve the performance further.
+
+We make StarNet as simple as possible [to show the key contribution of element-wise multiplication]:
+    - like NO layer-scale in network design,
+    - and NO EMA during training,
+    - which would improve the performance further.
 
 Created by: Xu Ma (Email: ma.xu1@northeastern.edu)
 Modified Date: Mar/29/2024
@@ -9,6 +13,13 @@ import torch
 import torch.nn as nn
 from timm.models.layers import DropPath, trunc_normal_
 from timm.models.registry import register_model
+
+model_urls = {
+    "starnet_s1": "https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s1.pth.tar",
+    "starnet_s2": "https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s2.pth.tar",
+    "starnet_s3": "https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s3.pth.tar",
+    "starnet_s4": "https://github.com/ma-xu/Rewrite-the-Stars/releases/download/checkpoints_v1/starnet_s4.pth.tar",
+}
 
 
 class ConvBN(torch.nn.Sequential):
@@ -48,12 +59,8 @@ class StarNet(nn.Module):
         self.num_classes = num_classes
         self.in_channel = 32
         # stem layer
-        self.stem = nn.Sequential(
-            ConvBN(3, self.in_channel, kernel_size=3, stride=2, padding=1),
-            nn.ReLU6()
-        )
-        # stochastic depth
-        dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]
+        self.stem = nn.Sequential(ConvBN(3, self.in_channel, kernel_size=3, stride=2, padding=1), nn.ReLU6())
+        dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))] # stochastic depth
         # build stages
         self.stages = nn.ModuleList()
         cur = 0
@@ -89,22 +96,42 @@ class StarNet(nn.Module):
 
 @register_model
 def starnet_s1(pretrained=False, **kwargs):
-    return StarNet(24, [2, 2, 8, 3], 4, **kwargs)
+    model = StarNet(24, [2, 2, 8, 3], **kwargs)
+    if pretrained:
+        url = model_urls['starnet_s1']
+        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
+        model.load_state_dict(checkpoint["state_dict"])
+    return model
 
 
 @register_model
 def starnet_s2(pretrained=False, **kwargs):
-    return StarNet(32, [1, 2, 6, 2], 4, **kwargs)
+    model = StarNet(32, [1, 2, 6, 2], **kwargs)
+    if pretrained:
+        url = model_urls['starnet_s2']
+        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
+        model.load_state_dict(checkpoint["state_dict"])
+    return model
 
 
 @register_model
 def starnet_s3(pretrained=False, **kwargs):
-    return StarNet(32, [2, 2, 8, 4], 4, **kwargs)
+    model = StarNet(32, [2, 2, 8, 4], **kwargs)
+    if pretrained:
+        url = model_urls['starnet_s3']
+        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
+        model.load_state_dict(checkpoint["state_dict"])
+    return model
 
 
 @register_model
 def starnet_s4(pretrained=False, **kwargs):
-    return StarNet(32, [3, 3, 12, 5], 4, drop_path_rate=0.1, **kwargs)
+    model = StarNet(32, [3, 3, 12, 5], **kwargs)
+    if pretrained:
+        url = model_urls['starnet_s4']
+        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
+        model.load_state_dict(checkpoint["state_dict"])
+    return model
 
 
 # very small networks #
@@ -121,3 +148,8 @@ def starnet_s100(pretrained=False, **kwargs):
 @register_model
 def starnet_s150(pretrained=False, **kwargs):
     return StarNet(24, [1, 2, 4, 2], 3, **kwargs)
+
+
+if __name__ == '__main__':
+    model = starnet_s2(pretrained=True)
+    print(model)

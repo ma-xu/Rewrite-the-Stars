@@ -32,10 +32,10 @@ We show how to train models on 8 GPUs. We retrain all models based on the relase
 
 ```bash
 # Train DemoNet variants
-python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data_dir {path-to-imagenet} --model {demonet-variants} -b 256 --lr 4e-3 --model-ema
+python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data {path-to-imagenet} --model {demonet-variants} -b 256 --lr 4e-3 --model-ema
 # Train StarNet variants (--drop-path 0. for S1, 0.01 for S2,S3, and 0.02 for S4)
 # Based on previous works, efficient / small networks don't need strong augmentations.
-python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data_dir {path-to-imagenet} --model {starnet-variants} -b 256 --lr 3e-3 --weight-decay 0.05 --aa rand-m1-mstd0.5-inc1 --cutmix 0.2 --color-jitter 0. --drop-path 0.
+python3 -m torch.distributed.launch --nproc_per_node=8 train_imagenet.py --data {path-to-imagenet} --model {starnet-variants} -b 256 --lr 3e-3 --weight-decay 0.05 --aa rand-m1-mstd0.5-inc1 --cutmix 0.2 --color-jitter 0. --drop-path 0.
 ```
 
 ### 4. Pretrained checkpoints
